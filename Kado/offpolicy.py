@@ -10,11 +10,10 @@ n_population = 40
 trunc_size = 4
 
 def train():
-    env = gym.make('CartPole-v0')
-    env.reset()
-
     pop = []
     next_gen = []
+
+    buf = get_experience()
 
     for i in range(n_population):
         pop.append(Wam('ID:' + str(i)))
@@ -22,7 +21,7 @@ def train():
 
     total_timesteps = 0
 
-    for g in range(6):
+    for g in range(5):
 
         if g != 0:
             for ii in range(n_population):
@@ -56,6 +55,25 @@ def train():
     for agent in pop[:trunc_size]:
         print(agent)
     print("solved in {} timesteps".format(total_timesteps))
+
+def get_experience():
+    env = gym.make('CartPole-v0')
+    env.reset()
+
+    tau_buff = TauBuffer()
+    n_episodes = 100
+
+    for e in range(n_episodes):
+        roll = []
+        observation = env.reset()
+        for s in range(150):
+            action = env.action_space.sample()
+            observation, reward, done, info = env.step(action)
+            roll.append((observation, reward, done, info))
+
+        tau_buff.add_rollout(Rollout(roll))
+
+    return tau_buff
 
 def mutate(parent, child):
     old_params = parent.model.get_weights()
