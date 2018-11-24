@@ -9,11 +9,11 @@ hdata = []
 ydata = []
 #ln, = plt.plot([], [], animated=True)
 
-t_range = np.linspace(-2, 15, num=20)
+t_range = np.linspace(-2, 16, num=20)
 
-lobj = ax.plot([],[],lw=2)[0]
-lobj2 = ax.plot([],[],lw=2,color='r')[0]
-lobj3 = ax.plot([],[], lw=2, color='g')[0]
+lobj = ax.plot([],[],lw=1, drawstyle='steps-pre')[0]
+lobj2 = ax.plot([],[],lw=1,color='r', drawstyle='steps-pre')[0]
+lobj3 = ax.plot([],[], lw=2, color='g', drawstyle='steps-pre')[0]
 lines = [lobj, lobj2, lobj3]
 
 def x_func(i):
@@ -39,13 +39,11 @@ ax.legend(["x(t-τ)", 'h(τ)', 'y(t)'])
 
 def init():
     ax.set_xlim(-2, 16)
-    ax.set_ylim(-0.1, 20)
+    ax.set_ylim(-0.1, 18)
     lines[0].set_data([],[])
     lines[1].set_data([],[])
     lines[2].set_data([],[])
-    #xtxt = ax.text(0.9, 0.95, 'w', transform=ax.transAxes)
-    #htxt = ax.text(0.9, 0.90, 'e', transform=ax.transAxes)
-    #ytxt = ax.text(0.9, 0.85, 'f', transform=ax.transAxes)
+
     return lines
 
 def update(frame):
@@ -62,11 +60,11 @@ def update(frame):
     return lines
 
 ani = FuncAnimation(fig, update, frames=t_range,
-                init_func=init, blit=True, interval=100)
+                init_func=init, blit=True, interval=200)
 
-# lol = ani.to_html5_video()
-# with open('k.html', 'w') as f:
-#    f.write(lol)
+lol = ani.to_html5_video()
+with open('k.html', 'w') as f:
+   f.write(lol)
 
 
 plt.show()
